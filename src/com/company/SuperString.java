@@ -23,6 +23,28 @@ public class SuperString {
         this.gamma = gamma;
     }
 
+    public void print() {
+        System.out.println("k = " + this.k);
+        System.out.println("s = " + this.s);
+        System.out.println("t:");
+        for (String s: this.t) {
+            System.out.println(s);
+        }
+        System.out.println("r:");
+        for (List<String> r: this.r) {
+            System.out.println(r);
+        }
+        System.out.println("Sigma:");
+        for (char ch: this.sigma) {
+            System.out.print(ch + " ");
+        }
+        System.out.println();
+        System.out.println("Gamma:");
+        for (char ch: this.gamma) {
+            System.out.print(ch + " ");
+        }
+    }
+
     private int GetK()
     {
         return this.k;
