@@ -1,13 +1,12 @@
-package com.company;
+package com.c02249;
+
+import org.w3c.dom.ls.LSOutput;
 
 import java.io.BufferedReader;
 import java.io.FileInputStream;
 import java.io.InputStream;
 import java.io.InputStreamReader;
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 
 public class Decoder {
 
@@ -22,6 +21,8 @@ public class Decoder {
     private SuperString extractSuperString(List<String> file) {
         Set<Character> sigma = new HashSet<Character>();
         Set<Character> gamma = new HashSet<Character>();
+        String gammaRegex = "[";
+
 
         //Extract k
         int k = Integer.parseInt(file.get(0));
@@ -42,39 +43,35 @@ public class Decoder {
 
         //Extract r/{r not in sigma}
         int size = file.size();
-        List<String>[] r = new ArrayList[size-k-2];
+        Map<Character, String[]> r = new HashMap<Character, String[]>();
         for(int i = k; i < file.size()-2; i++) {
             String ri = file.get(i+2);
 
             String[] gammaAndExpansions = ri.split(":");
-            gamma.add(gammaAndExpansions[0].charAt(0));
+            char gammaChar = gammaAndExpansions[0].charAt(0);
+            gamma.add(gammaChar);
+            gammaRegex = gammaRegex + gammaChar;
 
             String[] expansions = gammaAndExpansions[1].split(",");
             List<String> sortedExpansions = new ArrayList<String>();
             for (String ex : expansions) {
-                if (stringInSigma(ex, sigma)) {
+                if (s.contains(ex)) {
                     sortedExpansions.add(ex);
                 }
             }
-            r[i-k] = sortedExpansions;
+            r.put(gammaAndExpansions[0].charAt(0), sortedExpansions.toArray(String[]::new));
         }
+        gammaRegex = gammaRegex + "]";
 
-        return new SuperString(k,s,t,r, sigma, gamma);
+        return new SuperString(k,s,t,r, sigma, gamma, gammaRegex);
     }
 
-    private boolean stringInSigma(String string, Set<Character> sigma) {
-        for (char ch : string.toCharArray()) {
-            if (!sigma.contains(ch)) {
-                return false;
-            }
-        }
-        return true;
-    }
     private List<String> readFile() {
         List<String> input = new ArrayList<String>();
         try {
-            InputStream is = new FileInputStream(this.filename);
-            BufferedReader br = new BufferedReader(new InputStreamReader(is));
+            //InputStream is = new FileInputStream(this.filename);
+            //BufferedReader br = new BufferedReader(new InputStreamReader(is));
+            BufferedReader br = new BufferedReader(new InputStreamReader(System.in));//is));
 
             String line = br.readLine();
             while(line != null){
